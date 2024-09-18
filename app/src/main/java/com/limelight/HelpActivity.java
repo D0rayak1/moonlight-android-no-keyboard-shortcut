@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.window.OnBackInvokedCallback;
@@ -115,15 +114,4 @@ public class HelpActivity extends Activity {
         }
     }
 
-    @Override
-    public boolean onMouseEvent(MotionEvent event) {
-        if (event.getToolType(0) == MotionEvent.TOOL_TYPE_MOUSE) {
-            int buttonState = event.getButtonState();
-            if ((buttonState & MotionEvent.BUTTON_TERTIARY) != 0) {
-                // 处理鼠标中键点击事件
-                return true;
-            }
-        }
-        return super.onMouseEvent(event);
-    }
 }
