@@ -18,9 +18,6 @@ public class KeyboardAccessibilityService extends AccessibilityService {
 
         if (Game.instance != null && Game.instance.isConnected() && !BLACKLISTED_KEYS.contains(keyCode)) {
             // Preventing default will disable shortcut actions like alt+tab and etc.
-            if (action == KeyEvent.KEYCODE_BACK) {
-                return true;
-            }
             if (action == KeyEvent.ACTION_DOWN) {
                 Game.instance.handleKeyDown(event);
                 return true;
@@ -31,6 +28,17 @@ public class KeyboardAccessibilityService extends AccessibilityService {
         }
 
         return super.onKeyEvent(event);
+    }
+
+    @Override
+    public boolean onGenericMotionEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_BUTTON_PRESS) {
+            if ((event.getButtonState() & MotionEvent.BUTTON_TERTIARY) != 0) {
+                // 拦截中键点击
+                return true; // 返回true表示事件已被处理
+            }
+        }
+        return super.onGenericMotionEvent(event);
     }
 
     @Override
