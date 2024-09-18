@@ -18,6 +18,9 @@ public class KeyboardAccessibilityService extends AccessibilityService {
 
         if (Game.instance != null && Game.instance.isConnected() && !BLACKLISTED_KEYS.contains(keyCode)) {
             // Preventing default will disable shortcut actions like alt+tab and etc.
+            if (action == KeyEvent.KEYCODE_BACK) {
+                return true;
+            }
             if (action == KeyEvent.ACTION_DOWN) {
                 Game.instance.handleKeyDown(event);
                 return true;
