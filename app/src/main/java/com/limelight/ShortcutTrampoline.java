@@ -37,7 +37,7 @@ public class ShortcutTrampoline extends Activity {
     private final ServiceConnection serviceConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder binder) {
             final ComputerManagerService.ComputerManagerBinder localBinder =
-                    ((ComputerManagerService.ComputerManagerBinder)binder);
+                    ((ComputerManagerService.ComputerManagerBinder) binder);
 
             // Wait in a separate thread to avoid stalling the UI
             new Thread() {
@@ -118,7 +118,7 @@ public class ShortcutTrampoline extends Activity {
                                         }
 
                                         if (details.state == ComputerDetails.State.ONLINE && details.pairState == PairingManager.PairState.PAIRED) {
-                                            
+
                                             // Launch game if provided app ID, otherwise launch app view
                                             if (app != null) {
                                                 if (details.runningGameId == 0 || details.runningGameId == app.getAppId()) {
@@ -178,9 +178,8 @@ public class ShortcutTrampoline extends Activity {
                                                 // Now start the activities
                                                 startActivities(intentStack.toArray(new Intent[]{}));
                                             }
-                                            
-                                        }
-                                        else if (details.state == ComputerDetails.State.OFFLINE) {
+
+                                        } else if (details.state == ComputerDetails.State.OFFLINE) {
                                             // Computer offline - display an error dialog
                                             Dialog.displayDialog(ShortcutTrampoline.this,
                                                     getResources().getString(R.string.conn_error_title),
@@ -297,7 +296,7 @@ public class ShortcutTrampoline extends Activity {
     }
 
     @Override
-    public boolean onMouseEvent(MotionEvent event) {
+    public boolean dispatchTouchEvent(MotionEvent event) {
         if (event.getToolType(0) == MotionEvent.TOOL_TYPE_MOUSE) {
             int buttonState = event.getButtonState();
             if ((buttonState & MotionEvent.BUTTON_TERTIARY) != 0) {
@@ -305,6 +304,6 @@ public class ShortcutTrampoline extends Activity {
                 return true;
             }
         }
-        return super.onMouseEvent(event);
+        return super.dispatchTouchEvent(event);
     }
 }

@@ -69,7 +69,7 @@ public class PcView extends Activity implements AdapterFragmentCallbacks {
     private final ServiceConnection serviceConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder binder) {
             final ComputerManagerService.ComputerManagerBinder localBinder =
-                    ((ComputerManagerService.ComputerManagerBinder)binder);
+                    ((ComputerManagerService.ComputerManagerBinder) binder);
 
             // Wait in a separate thread to avoid stalling the UI
             new Thread() {
@@ -170,14 +170,13 @@ public class PcView extends Activity implements AdapterFragmentCallbacks {
         }
 
         getFragmentManager().beginTransaction()
-            .replace(R.id.pcFragmentContainer, new AdapterFragment())
-            .commitAllowingStateLoss();
+                .replace(R.id.pcFragmentContainer, new AdapterFragment())
+                .commitAllowingStateLoss();
 
         noPcFoundLayout = findViewById(R.id.no_pc_found_layout);
         if (pcGridAdapter.getCount() == 0) {
             noPcFoundLayout.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             noPcFoundLayout.setVisibility(View.INVISIBLE);
         }
         pcGridAdapter.notifyDataSetChanged();
@@ -223,8 +222,7 @@ public class PcView extends Activity implements AdapterFragmentCallbacks {
                 }
             });
             setContentView(surfaceView);
-        }
-        else {
+        } else {
             LimeLog.info("Cached GL Renderer: " + glPrefs.glRenderer);
             completeOnCreate();
         }
@@ -332,15 +330,14 @@ public class PcView extends Activity implements AdapterFragmentCallbacks {
 
         // Call superclass
         super.onCreateContextMenu(menu, v, menuInfo);
-                
+
         AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
         ComputerObject computer = (ComputerObject) pcGridAdapter.getItem(info.position);
 
         // Add a header with PC status details
         menu.clearHeader();
         String headerTitle = computer.details.name + " - ";
-        switch (computer.details.state)
-        {
+        switch (computer.details.state) {
             case ONLINE:
                 headerTitle += getResources().getString(R.string.pcview_menu_header_online);
                 break;
@@ -357,17 +354,15 @@ public class PcView extends Activity implements AdapterFragmentCallbacks {
 
         // Inflate the context menu
         if (computer.details.state == ComputerDetails.State.OFFLINE ||
-            computer.details.state == ComputerDetails.State.UNKNOWN) {
+                computer.details.state == ComputerDetails.State.UNKNOWN) {
             menu.add(Menu.NONE, WOL_ID, 1, getResources().getString(R.string.pcview_menu_send_wol));
             menu.add(Menu.NONE, GAMESTREAM_EOL_ID, 2, getResources().getString(R.string.pcview_menu_eol));
-        }
-        else if (computer.details.pairState != PairState.PAIRED) {
+        } else if (computer.details.pairState != PairState.PAIRED) {
             menu.add(Menu.NONE, PAIR_ID, 1, getResources().getString(R.string.pcview_menu_pair_pc));
             if (computer.details.nvidiaServer) {
                 menu.add(Menu.NONE, GAMESTREAM_EOL_ID, 2, getResources().getString(R.string.pcview_menu_eol));
             }
-        }
-        else {
+        } else {
             if (computer.details.runningGameId != 0) {
                 menu.add(Menu.NONE, RESUME_ID, 1, getResources().getString(R.string.applist_menu_resume));
                 menu.add(Menu.NONE, QUIT_ID, 2, getResources().getString(R.string.applist_menu_quit));
@@ -382,7 +377,7 @@ public class PcView extends Activity implements AdapterFragmentCallbacks {
 
         menu.add(Menu.NONE, TEST_NETWORK_ID, 5, getResources().getString(R.string.pcview_menu_test_network));
         menu.add(Menu.NONE, DELETE_ID, 6, getResources().getString(R.string.pcview_menu_delete_pc));
-        menu.add(Menu.NONE, VIEW_DETAILS_ID, 7,  getResources().getString(R.string.pcview_menu_details));
+        menu.add(Menu.NONE, VIEW_DETAILS_ID, 7, getResources().getString(R.string.pcview_menu_details));
     }
 
     @Override
@@ -421,33 +416,28 @@ public class PcView extends Activity implements AdapterFragmentCallbacks {
                         // Don't display any toast, but open the app list
                         message = null;
                         success = true;
-                    }
-                    else {
+                    } else {
                         final String pinStr = PairingManager.generatePinString();
 
                         // Spin the dialog off in a thread because it blocks
                         Dialog.displayDialog(PcView.this, getResources().getString(R.string.pair_pairing_title),
-                                getResources().getString(R.string.pair_pairing_msg)+" "+pinStr+"\n\n"+
-                                getResources().getString(R.string.pair_pairing_help), false);
+                                getResources().getString(R.string.pair_pairing_msg) + " " + pinStr + "\n\n" +
+                                        getResources().getString(R.string.pair_pairing_help), false);
 
                         PairingManager pm = httpConn.getPairingManager();
 
                         PairState pairState = pm.pair(httpConn.getServerInfo(true), pinStr);
                         if (pairState == PairState.PIN_WRONG) {
                             message = getResources().getString(R.string.pair_incorrect_pin);
-                        }
-                        else if (pairState == PairState.FAILED) {
+                        } else if (pairState == PairState.FAILED) {
                             if (computer.runningGameId != 0) {
                                 message = getResources().getString(R.string.pair_pc_ingame);
-                            }
-                            else {
+                            } else {
                                 message = getResources().getString(R.string.pair_fail);
                             }
-                        }
-                        else if (pairState == PairState.ALREADY_IN_PROGRESS) {
+                        } else if (pairState == PairState.ALREADY_IN_PROGRESS) {
                             message = getResources().getString(R.string.pair_already_in_progress);
-                        }
-                        else if (pairState == PairState.PAIRED) {
+                        } else if (pairState == PairState.PAIRED) {
                             // Just navigate to the app view without displaying a toast
                             message = null;
                             success = true;
@@ -458,8 +448,7 @@ public class PcView extends Activity implements AdapterFragmentCallbacks {
                             // Invalidate reachability information after pairing to force
                             // a refresh before reading pair state again
                             managerBinder.invalidateStateForComputer(computer.uuid);
-                        }
-                        else {
+                        } else {
                             // Should be no other values
                             message = null;
                         }
@@ -487,8 +476,7 @@ public class PcView extends Activity implements AdapterFragmentCallbacks {
                         if (toastSuccess) {
                             // Open the app list after a successful pairing attempt
                             doAppList(computer, true, false);
-                        }
-                        else {
+                        } else {
                             // Start polling again if we're still in the foreground
                             startComputerUpdates();
                         }
@@ -555,12 +543,10 @@ public class PcView extends Activity implements AdapterFragmentCallbacks {
                         httpConn.unpair();
                         if (httpConn.getPairState() == PairingManager.PairState.NOT_PAIRED) {
                             message = getResources().getString(R.string.unpair_success);
-                        }
-                        else {
+                        } else {
                             message = getResources().getString(R.string.unpair_fail);
                         }
-                    }
-                    else {
+                    } else {
                         message = getResources().getString(R.string.unpair_error);
                     }
                 } catch (UnknownHostException e) {
@@ -680,7 +666,7 @@ public class PcView extends Activity implements AdapterFragmentCallbacks {
                 return super.onContextItemSelected(item);
         }
     }
-    
+
     private void removeComputer(ComputerDetails details) {
         managerBinder.removeComputer(details);
 
@@ -712,7 +698,7 @@ public class PcView extends Activity implements AdapterFragmentCallbacks {
             }
         }
     }
-    
+
     private void updateComputer(ComputerDetails details) {
         ComputerObject existingEntry = null;
 
@@ -729,8 +715,7 @@ public class PcView extends Activity implements AdapterFragmentCallbacks {
         if (existingEntry != null) {
             // Replace the information in the existing entry
             existingEntry.details = details;
-        }
-        else {
+        } else {
             // Add a new entry
             pcGridAdapter.addComputer(new ComputerObject(details));
 
@@ -756,7 +741,7 @@ public class PcView extends Activity implements AdapterFragmentCallbacks {
                                     long id) {
                 ComputerObject computer = (ComputerObject) pcGridAdapter.getItem(pos);
                 if (computer.details.state == ComputerDetails.State.UNKNOWN ||
-                    computer.details.state == ComputerDetails.State.OFFLINE) {
+                        computer.details.state == ComputerDetails.State.OFFLINE) {
                     // Open the context menu if a PC is offline or refreshing
                     openContextMenu(arg1);
                 } else if (computer.details.pairState != PairState.PAIRED) {
@@ -788,7 +773,7 @@ public class PcView extends Activity implements AdapterFragmentCallbacks {
     }
 
     @Override
-    public boolean onMouseEvent(MotionEvent event) {
+    public boolean dispatchTouchEvent(MotionEvent event) {
         if (event.getToolType(0) == MotionEvent.TOOL_TYPE_MOUSE) {
             int buttonState = event.getButtonState();
             if ((buttonState & MotionEvent.BUTTON_TERTIARY) != 0) {
@@ -796,6 +781,6 @@ public class PcView extends Activity implements AdapterFragmentCallbacks {
                 return true;
             }
         }
-        return super.onMouseEvent(event);
+        return super.dispatchTouchEvent(event);
     }
 }

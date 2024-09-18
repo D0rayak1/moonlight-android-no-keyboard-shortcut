@@ -83,7 +83,7 @@ public class AppView extends Activity implements AdapterFragmentCallbacks {
     private final ServiceConnection serviceConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder binder) {
             final ComputerManagerService.ComputerManagerBinder localBinder =
-                    ((ComputerManagerService.ComputerManagerBinder)binder);
+                    ((ComputerManagerService.ComputerManagerBinder) binder);
 
             // Wait in a separate thread to avoid stalling the UI
             new Thread() {
@@ -344,7 +344,7 @@ public class AppView extends Activity implements AdapterFragmentCallbacks {
             LimeLog.info("Loaded applist from cache");
         } catch (IOException | XmlPullParserException e) {
             if (lastRawApplist != null) {
-                LimeLog.warning("Saved applist corrupted: "+lastRawApplist);
+                LimeLog.warning("Saved applist corrupted: " + lastRawApplist);
                 e.printStackTrace();
             }
             LimeLog.info("Loading applist from the network");
@@ -402,8 +402,7 @@ public class AppView extends Activity implements AdapterFragmentCallbacks {
             if (lastRunningAppId == selectedApp.app.getAppId()) {
                 menu.add(Menu.NONE, START_OR_RESUME_ID, 1, getResources().getString(R.string.applist_menu_resume));
                 menu.add(Menu.NONE, QUIT_ID, 2, getResources().getString(R.string.applist_menu_quit));
-            }
-            else {
+            } else {
                 menu.add(Menu.NONE, START_WITH_QUIT, 1, getResources().getString(R.string.applist_menu_quit_and_start));
             }
         }
@@ -423,7 +422,7 @@ public class AppView extends Activity implements AdapterFragmentCallbacks {
             ImageView appImageView = info.targetView.findViewById(R.id.grid_image);
             if (appImageView != null) {
                 // We have a grid ImageView, so we must be in grid-mode
-                BitmapDrawable drawable = (BitmapDrawable)appImageView.getDrawable();
+                BitmapDrawable drawable = (BitmapDrawable) appImageView.getDrawable();
                 if (drawable != null && drawable.getBitmap() != null) {
                     // We have a bitmap loaded too
                     menu.add(Menu.NONE, CREATE_SHORTCUT_ID, 5, getResources().getString(R.string.applist_menu_scut));
@@ -464,15 +463,15 @@ public class AppView extends Activity implements AdapterFragmentCallbacks {
                         suspendGridUpdates = true;
                         ServerHelper.doQuit(AppView.this, computer,
                                 app.app, managerBinder, new Runnable() {
-                            @Override
-                            public void run() {
-                                // Trigger a poll immediately
-                                suspendGridUpdates = false;
-                                if (poller != null) {
-                                    poller.pollNow();
-                                }
-                            }
-                        });
+                                    @Override
+                                    public void run() {
+                                        // Trigger a poll immediately
+                                        suspendGridUpdates = false;
+                                        if (poller != null) {
+                                            poller.pollNow();
+                                        }
+                                    }
+                                });
                     }
                 }, null);
                 return true;
@@ -485,8 +484,7 @@ public class AppView extends Activity implements AdapterFragmentCallbacks {
                 if (item.isChecked()) {
                     // Transitioning hidden to shown
                     hiddenAppIds.remove(app.app.getAppId());
-                }
-                else {
+                } else {
                     // Transitioning shown to hidden
                     hiddenAppIds.add(app.app.getAppId());
                 }
@@ -495,7 +493,7 @@ public class AppView extends Activity implements AdapterFragmentCallbacks {
 
             case CREATE_SHORTCUT_ID:
                 ImageView appImageView = info.targetView.findViewById(R.id.grid_image);
-                Bitmap appBits = ((BitmapDrawable)appImageView.getDrawable()).getBitmap();
+                Bitmap appBits = ((BitmapDrawable) appImageView.getDrawable()).getBitmap();
                 if (!shortcutHelper.createPinnedGameShortcut(computer, app.app, appBits)) {
                     Toast.makeText(AppView.this, getResources().getString(R.string.unable_to_pin_shortcut), Toast.LENGTH_LONG).show();
                 }
@@ -512,7 +510,7 @@ public class AppView extends Activity implements AdapterFragmentCallbacks {
             public void run() {
                 boolean updated = false;
 
-                    // Look through our current app list to tag the running app
+                // Look through our current app list to tag the running app
                 for (int i = 0; i < appGridAdapter.getCount(); i++) {
                     AppObject existingApp = (AppObject) appGridAdapter.getItem(i);
 
@@ -521,18 +519,15 @@ public class AppView extends Activity implements AdapterFragmentCallbacks {
                             existingApp.app.getAppId() == details.runningGameId) {
                         // This app was running and still is, so we're done now
                         return;
-                    }
-                    else if (existingApp.app.getAppId() == details.runningGameId) {
+                    } else if (existingApp.app.getAppId() == details.runningGameId) {
                         // This app wasn't running but now is
                         existingApp.isRunning = true;
                         updated = true;
-                    }
-                    else if (existingApp.isRunning) {
+                    } else if (existingApp.isRunning) {
                         // This app was running but now isn't
                         existingApp.isRunning = false;
                         updated = true;
-                    }
-                    else {
+                    } else {
                         // This app wasn't running and still isn't
                     }
                 }
@@ -621,7 +616,7 @@ public class AppView extends Activity implements AdapterFragmentCallbacks {
     @Override
     public int getAdapterFragmentLayoutId() {
         return PreferenceConfiguration.readPreferences(AppView.this).smallIconMode ?
-                    R.layout.app_grid_view_small : R.layout.app_grid_view;
+                R.layout.app_grid_view_small : R.layout.app_grid_view;
     }
 
     @Override
@@ -665,7 +660,7 @@ public class AppView extends Activity implements AdapterFragmentCallbacks {
     }
 
     @Override
-    public boolean onMouseEvent(MotionEvent event) {
+    public boolean dispatchTouchEvent(MotionEvent event) {
         if (event.getToolType(0) == MotionEvent.TOOL_TYPE_MOUSE) {
             int buttonState = event.getButtonState();
             if ((buttonState & MotionEvent.BUTTON_TERTIARY) != 0) {
@@ -673,6 +668,6 @@ public class AppView extends Activity implements AdapterFragmentCallbacks {
                 return true;
             }
         }
-        return super.onMouseEvent(event);
+        return super.dispatchTouchEvent(event);
     }
 }
