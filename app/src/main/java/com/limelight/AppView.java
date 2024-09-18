@@ -665,23 +665,14 @@ public class AppView extends Activity implements AdapterFragmentCallbacks {
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        // 仅处理鼠标事件
+    public boolean onMouseEvent(MotionEvent event) {
         if (event.getToolType(0) == MotionEvent.TOOL_TYPE_MOUSE) {
             int buttonState = event.getButtonState();
-
-            // 检查鼠标中键点击
             if ((buttonState & MotionEvent.BUTTON_TERTIARY) != 0) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    // 拦截鼠标中键按下事件
-                    return true; // 表示拦截事件，不传递给下层
-                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    // 拦截鼠标中键释放事件
-                    return true; // 表示拦截事件
-                }
+                // 处理鼠标中键点击事件
+                return true;
             }
         }
-        // 如果不是鼠标中键点击，继续传递事件
-        return super.onTouchEvent(event);
+        return super.onMouseEvent(event);
     }
 }

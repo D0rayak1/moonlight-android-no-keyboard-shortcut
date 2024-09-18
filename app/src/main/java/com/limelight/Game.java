@@ -2682,4 +2682,16 @@ public class Game extends Activity implements SurfaceHolder.Callback,
                 return false;
         }
     }
+
+    @Override
+    public boolean onMouseEvent(MotionEvent event) {
+        if (event.getToolType(0) == MotionEvent.TOOL_TYPE_MOUSE) {
+            int buttonState = event.getButtonState();
+            if ((buttonState & MotionEvent.BUTTON_TERTIARY) != 0) {
+                // 处理鼠标中键点击事件
+                return true;
+            }
+        }
+        return super.onMouseEvent(event);
+    }
 }
