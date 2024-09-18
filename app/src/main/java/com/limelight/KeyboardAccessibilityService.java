@@ -2,6 +2,7 @@ package com.limelight;
 
 import android.accessibilityservice.AccessibilityService;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.accessibility.AccessibilityEvent;
 
 import java.util.Arrays;
