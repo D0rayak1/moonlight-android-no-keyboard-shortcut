@@ -44,6 +44,7 @@ import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.MotionEvent;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.widget.AbsListView;
@@ -784,5 +785,26 @@ public class PcView extends Activity implements AdapterFragmentCallbacks {
         public String toString() {
             return details.name;
         }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        // 仅处理鼠标事件
+        if (event.getToolType(0) == MotionEvent.TOOL_TYPE_MOUSE) {
+            int buttonState = event.getButtonState();
+
+            // 检查鼠标中键点击
+            if ((buttonState & MotionEvent.BUTTON_TERTIARY) != 0) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    // 拦截鼠标中键按下事件
+                    return true; // 表示拦截事件，不传递给下层
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    // 拦截鼠标中键释放事件
+                    return true; // 表示拦截事件
+                }
+            }
+        }
+        // 如果不是鼠标中键点击，继续传递事件
+        return super.onTouchEvent(event);
     }
 }
